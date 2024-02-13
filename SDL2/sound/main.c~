@@ -1,0 +1,46 @@
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
+#include <stdio.h>
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+
+int main(int argc, char *argv[]){
+
+  const int screen_width = 640;   // 40p * 16
+  const int screen_height = 360;  // 40p * 9
+  const int camera_width = 320;
+  const int camera_height = 180;
+  
+  if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS) != 0){
+    printf("error sdl\n");
+  }
+  SDL_Window *win = SDL_CreateWindow("Camera",
+				     SDL_WINDOWPOS_CENTERED,
+				     SDL_WINDOWPOS_CENTERED,
+				     screen_width,
+				     screen_height,
+				     SDL_WINDOW_SHOWN);
+  SDL_Renderer *render = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+  bool quit = false;
+
+  while(!quit){
+  SDL_Event event;
+    while(SDL_PollEvent(&event) != 0){
+      if(event.type == SDL_QUIT){
+	quit = true;
+      }
+
+      SDL_SetRenderDrawColor(render, 200, 200, 200, 255);
+      SDL_RenderClear(render);
+      SDL_RenderPresent(render);
+
+    }
+  }
+
+  SDL_DestroyWindow(win);
+  SDL_DestroyRenderer(render);
+  SDL_Quit();
+  
+  return 0;
+}

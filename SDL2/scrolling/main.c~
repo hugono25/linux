@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+
+
+int main(int argc, char *argv[]){
+  const int screen_width = 640;   // 40p * 16
+  const int screen_height = 360;  // 40p * 9
+
+  const int camera_width = 320;
+  const int camera_height = 180;
+  
+  if(SDL_Init(SDL_INIT_VIDEO) != 0){
+    printf("error sdl\n");
+  }
+  SDL_Window *win = SDL_CreateWindow("Camera",
+				     SDL_WINDOWPOS_CENTERED,
+				     SDL_WINDOWPOS_CENTERED,
+				     screen_width,
+				     screen_height,
+				     SDL_WINDOW_SHOWN);
+  SDL_Renderer *render = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+
+  SDL_Surface *image = image = SDL_LoadBMP("cloud.bmp");
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(render, image);
+  SDL_FreeSurface(image);
+
+  SDL_Rect srcTexture = {0, 0, screen_width, screen_height}; // image size
+  SDL_Rect dstTexture = {0, 0, screen_width, screen_height};
+  
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+  bool quit = false;
+  SDL_Event event;
+
+  while(!quit){
+    while(SDL_PollEvent(&event) != 0){
+      if(event.type == SDL_QUIT){
+	quit = true;
+      }
+      SDL_RenderCopy(render, texture, &srcTexture, &dstTexture);	
+      
+      SDL_SetRenderDrawColor(render, 200, 200, 200, 255);
+      SDL_RenderPresent(render);
+
+    }
+  }
+  SDL_DestroyTexture(texture);
+  SDL_DestroyWindow(win);
+  SDL_DestroyRenderer(render);
+  SDL_Quit();
+
+
+  return 0;
+}
