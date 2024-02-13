@@ -7,4 +7,3 @@ C and C++ projects made in linux
      - Text
      - Scrolling
      - Gui
-     - Game
